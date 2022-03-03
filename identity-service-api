@@ -1,0 +1,299 @@
+openapi: 3.0.3
+info:
+  title: Identity Service
+  description: |
+    This is a Identity service API definition.
+    The API is used to enable the consumers
+    to create, read, update and delete customer information
+  version: 2.0.1
+servers:
+  - description: Main (Production) Server
+    url: 'http://localhost:9001'
+  
+
+paths:
+  /customerData:
+    post: 
+      summary: To create new customer identity account
+      description: 'to POST information about customer including peron details and service info'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        '201':
+          description: Successfully created a new identity account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response200' 
+        '404':
+          description: Error, NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response404' 
+
+  
+  /customerData/{id}:
+    get:
+      summary: READ identity account details using unique person id
+      description: |
+        to READ information about the identity account
+        when given personId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: unique person identifier
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: Successfully pulled identity account information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Request' 
+        '404':
+          description: Error! identity account NOT FOUND
+          
+    
+    delete:
+      operationId: delete
+      summary: DELETE identity account details using unique person id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: unique person identifier
+          schema: 
+            type: string
+      responses:
+        '200':
+          description: customer identity account deleted
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Response200'
+        '404':
+          description: Error, identity account NOT FOUND
+          
+    
+    patch:
+      operationId: update
+      summary: UPDATE identity account details using unique person id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: unique person identifier
+          schema: 
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Request'
+      responses:
+        '200':
+          description: person details updated
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/Response200'
+        '404':
+          description: Error, NOT FOUND
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response404' 
+    
+    
+
+components:
+  schemas:
+    Request:
+      description: Request model for person and service information
+      properties:
+        Request-Data:
+          properties:
+            Person:
+              properties:
+                PersonDetails:
+                  properties:
+                    personId:
+                      type: string
+                      example: BBBB
+                    firstName:
+                      type: string
+                      example: Hanif
+                    lastName:
+                      type: string
+                      example: Muhammad
+                    personNameId:
+                      type: string
+                      example: H90K347
+                    email:
+                      type: string
+                      example: example@sth.com
+                    password:
+                      type: string
+                      example: Testing123
+                    dateOfBirth:
+                      type: string
+                      example: 22-05-1994
+                Address:
+                  properties:
+                    apartmentNumber:
+                      type: string
+                      example: "127"       
+                    streetName:
+                      type: string
+                      example: Bella road
+                    city:
+                      type: string
+                      example: Islamabad
+                    country: 
+                      type: string
+                      example: Pakistan
+                    
+        Service-Info:
+          properties: 
+            iam:
+              type: string 
+              example: Wso2
+            channelId: 
+              type: string
+              example: DDDDD
+            accountProviderId: 
+              type: string
+              example: eeeeee
+            userId:
+              type: string
+              example: dddd
+            countryId: 
+              type: string
+              example: 12df
+            transactionId:  
+              type: string
+              example: "{{$guid}}"
+            origin:
+              type: string
+              example: postman
+            service: 
+              type: string
+              example: identityServiceWeb
+            instance: 
+              type: string
+              example: EEEEEE
+            timestamp:
+              type: string
+              example: "2017-11-16T11:04:00Z"
+            
+    Response200:
+      description: Response model to show when a request is made successfully
+      properties:
+        ResponseData:
+          properties: 
+            Status:
+              properties:
+                message: 
+                  type: string
+                  example: Message has been received
+            Payload:
+              properties:
+                activationStatus:
+                  type: string
+                  example: pending
+                eId:
+                  type: integer
+                  example: 78
+        ServiceInfo:
+          properties:
+            iam:
+              type: string 
+              example: Wso2
+            channelId: 
+              type: string
+              example: DDDDD
+            accountProviderId: 
+              type: string
+              example: eeeeee
+            userId:
+              type: string
+              example: dddd
+            countryId: 
+              type: string
+              example: ""
+            transactionId:  
+              type: string
+              example: "00fee2e6-0e2b-4ebf-899c-35276592a13c"
+            origin:
+              type: string
+              example: Wso2Adapter
+            service: 
+              type: string
+              example: Wso2Adapter
+            instance: 
+              type: string
+              example: EEEEEE
+            timestamp:
+              type: string
+              example: "28/02/2022 12:08:28"
+              
+    Response404:
+      description: Response model to show when a request shows error
+      properties:
+        ErrorResponse:
+          properties: 
+            Error:
+              properties:
+                code:
+                  type: integer
+                  example: 404
+                id:
+                  type: string 
+                  example: "1"
+                details:
+                  type: string 
+                  example: HTTP Status will be NOT FOUND (CODE 404)
+                messagePointer:
+                  type: string
+                  example: " "
+            
+        ServiceInfo:
+          properties:
+            iam:
+              type: string 
+              example: Wso2
+            channelId: 
+              type: string
+              example: DDDDD
+            accountProviderId: 
+              type: string
+              example: eeeeee
+            userId:
+              type: string
+              example: dddd
+            countryId: 
+              type: string
+              example: ""
+            transactionId:  
+              type: string
+              example: "{{$guid}}"
+            origin:
+              type: string
+              example: postman
+            service: 
+              type: string
+              example: identityServiceWeb
+            instance: 
+              type: string
+              example: EEEEEE
+            timestamp:
+              type: string
+              example: "2017-11-16T11:04:00Z"
